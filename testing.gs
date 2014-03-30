@@ -48,10 +48,17 @@ public function runTests() {
 }
 
 /**
- * Primitive assert function that keeps track of the passing state during a
- * test execution.
- * @param {boolean} Test that the asserted behavior was correct.
+ * Asserts that the the expected outcome is true.
+ * @param {boolean} Test that the asserted behavior was true.
  */
 public function assert(expected) {
   this.testPassed &= expected;
+}
+
+/**
+ * Asserts that the expected outcome is false.
+ * @param {boolean} Test that the asserted behavior was false.
+ */
+public function refute(expected) {
+  assert(!expected);
 }
