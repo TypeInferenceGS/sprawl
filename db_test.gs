@@ -1,3 +1,7 @@
+function onCreated() {
+  this.join("db_testing");
+}
+
 public function testCreatingAndRemovingTables() {
   this.createTable("test_table");
   this.assert(tableExists("test_table"));
@@ -37,22 +41,6 @@ public function testBuildingIndexNames() {
   this.assert(index == "index_test_on_name_gender");
 }
 
-public function testTransactions() {
-  this.beginTransaction();
-  this.createTable("test_table");
-  this.assert(tableExists("test_table"));
-
-  this.rollbackTransaction();
-  this.refute(tableExists("test_table"));
-
-  this.createTable("test_table");
-
-  this.beginTransaction();
-  this.dropTable("test_table");
-  this.commitTransaction();
-  this.refute(tableExists("test_table"));
-}
-
 public function testBuildQueryWithEscapableCharacters() {
   query = this.buildQuery("SELECT * FROM t WHERE '%s'", { "haxxx'--" });
 
@@ -63,41 +51,4 @@ public function testBuildQueryWithArray() {
   query = this.buildQuery("SELECT * FROM t WHERE id IN (%s)", { { 1, 2, 3} });
 
   this.assert(query == "SELECT * FROM t WHERE id IN (1,2,3)");
-}
-
-function tableExists(table) {
-  query = this.buildQuery("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = '%s'", { table });
-  tablesExists = this.runQuery(query, true);
-  tableExists = false;
-
-  for (exists : tablesExists) {
-    tableExists |= exists[0] == 1;
-  }
-
-  return tableExists;
-}
-
-function columnExists(table, column, type) {
-  query = this.buildQuery("PRAGMA table_info('%s')", { table });
-  columnInfos = this.runQuery(query, true);
-  columnExists = false;
-
-  for(columnInfo : columnInfos) {
-    columnExists |= columnInfo[1] == column && columnInfo[2] == type;
-  }
-
-  return columnExists;
-}
-
-function indexExists(table, index, unique) {
-  unique = unique ? 1 : 0;
-  query = this.buildQuery("PRAGMA index_list('%s')", { table });
-  indexInfos = this.runQuery(query, true);
-  indexExists = false;
-
-  for(indexInfo : indexInfos) {
-    indexExists |= indexInfo[1] == index && indexInfo[2] == unique;
-  }
-
-  return indexExists;
 }

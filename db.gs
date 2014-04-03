@@ -112,27 +112,6 @@ public function runQuery(query, returningRows) {
 }
 
 /**
- * Begins a database transaction.
- */
-public function beginTransaction() {
-  this.runQuery("BEGIN", false);
-}
-
-/**
- * Commits the open database transaction.
- */
-public function commitTransaction() {
-  this.runQuery("COMMIT", false);
-}
-
-/**
- * Roll back the the open database transaction.
- */
-public function rollbackTransaction() {
-  this.runQuery("ROLLBACK", false);
-}
-
-/**
  * Builds a query from a format string and data. Note that the
  * data is escaped to prevent SQL injection attacks.
  * @param {string} printf-style format string.
